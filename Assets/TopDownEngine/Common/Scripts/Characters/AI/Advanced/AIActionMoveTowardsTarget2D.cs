@@ -46,23 +46,37 @@ namespace MoreMountains.TopDownEngine
 			{
 				return;
 			}
-            
-			if (this.transform.position.x < _brain.Target.position.x)
+			float xdif = System.Math.Abs(this.transform.position.x - _brain.Target.position.x);
+            float ydif = System.Math.Abs(this.transform.position.y - _brain.Target.position.y);
+			float xgain = 1;
+			float ygain = 1;
+			if (xdif > ydif)
 			{
-				_characterMovement.SetHorizontalMovement(1f);
+				ygain = (ydif * xgain) / xdif;
+
 			}
 			else
 			{
-				_characterMovement.SetHorizontalMovement(-1f);
+                xgain = (xdif * ygain) / ydif;
+            }
+
+            if (this.transform.position.x < _brain.Target.position.x)
+			{
+
+				_characterMovement.SetHorizontalMovement(xgain);
+			}
+			else
+			{
+				_characterMovement.SetHorizontalMovement(-xgain);
 			}
 
 			if (this.transform.position.y < _brain.Target.position.y)
 			{
-				_characterMovement.SetVerticalMovement(1f);
+				_characterMovement.SetVerticalMovement(ygain);
 			}
 			else
 			{
-				_characterMovement.SetVerticalMovement(-1f);
+				_characterMovement.SetVerticalMovement(-ygain);
 			}
             
 			if (Mathf.Abs(this.transform.position.x - _brain.Target.position.x) < MinimumDistance)
